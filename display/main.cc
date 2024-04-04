@@ -7,8 +7,12 @@
 int main(int argc,char* argv[]){
     QApplication app(argc,argv);
 
+    if(argc != 2){
+        std::cerr << "plese exec:display IP:port" << std::endl;
+        return -1;
+    }
     monitor::MonitorWidget monitor_widget;
-    monitor::RpcStub stub("localhost:50051");
+    monitor::RpcStub stub(argv[1]);
     monitor::proto::MonitorInfo monitor_info;
 
     stub.GetMonitorInfo(&monitor_info);

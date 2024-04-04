@@ -2,10 +2,9 @@
 #include <grpcpp/server_builder.h>
 #include "rpc_manager.h"
 
-const char* k_ServerListening = "0.0.0.0:50051";
-void InitServer(){
+void InitServer(std::string_view address){
     grpc::ServerBuilder builder;
-    builder.AddListeningPort(k_ServerListening,grpc::InsecureServerCredentials());
+    builder.AddListeningPort(address.data(),grpc::InsecureServerCredentials());
 
     monitor::GrpcManagerImpl grpc_server;
     builder.RegisterService(&grpc_server);
@@ -16,7 +15,12 @@ void InitServer(){
     return; 
 }
 
-int main(){
-    InitServer();
+int main(int argc,char* argv[]){
+
+    if(argc != 2){
+        std::cerr << "plese exec:server IP:port" << std::endl;
+        return -1;
+    }
+    InitServer(argv[1]);
     return 0;
 }
